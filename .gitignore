@@ -1,0 +1,9 @@
+# Directories to ignore
+node_modules/
+[B|b]in/
+[O|o]bj/
+[D|d]ebug/
+wwwroot/
+
+# Files to ignore
+
