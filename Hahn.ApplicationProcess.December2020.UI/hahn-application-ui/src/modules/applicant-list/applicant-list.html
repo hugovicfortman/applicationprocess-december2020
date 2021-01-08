@@ -1,3 +1,10 @@
 <template>
-  ${ message }
+	<div class="applicants-list">
+		<div class="list-group">
+			<a repeat.for="applicant of applicants" class="list-group-item list-group-item-action" route-href="route: applicant; params.bind:{ id: applicant.id }">
+				<strong>${ applicant.name } ${ applicant.familyName } </strong><br>
+				<small>${ applicant.emailAddress }</small>
+			</a>
+		</div>
+	</div>
 </template>

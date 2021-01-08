@@ -11,6 +11,7 @@
     "aurelia-animator-css": "^1.0.4",
     "aurelia-bootstrapper": "^2.3.3",
     "aurelia-form-renderer-bootstrap": "0.0.2",
+    "aurelia-validation": "^2.0.0-rc2",
     "bootstrap": "^4.5.3"
   },
   "devDependencies": {

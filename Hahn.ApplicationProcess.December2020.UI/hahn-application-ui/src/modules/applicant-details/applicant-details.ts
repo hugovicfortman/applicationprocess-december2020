@@ -1,10 +1,13 @@
-import { inject } from 'aurelia-framework';
+import { inject, NewInstance } from 'aurelia-framework';
 import { EventAggregator } from 'aurelia-event-aggregator';
 import { WebAPI } from '../../resources/web-api';
 import { areEqual } from '../../resources/utility';
 import { ApplicantCreated, ApplicantViewed, ApplicantUpdated, ApplicantDeleted } from '../../services/messages';
+import { BootstrapFormRenderer } from 'aurelia-form-renderer-bootstrap';
+import { ValidationRules, ValidationController } from 'aurelia-validation';
 
 interface Applicant {
+  id: number;
   age: number;
   hired: boolean;
   name: string;
@@ -14,7 +17,7 @@ interface Applicant {
   emailAddress: string;
 }
 
-@inject(WebAPI, EventAggregator)
+@inject(WebAPI, EventAggregator, NewInstance.of(ValidationController))
 export class ApplicantDetails {
 	routeConfig;
 	applicant: Applicant ;
@@ -23,7 +26,9 @@ export class ApplicantDetails {
 
   public title = "Applicant";
 
-	constructor(private api: WebAPI, private ea: EventAggregator) { }
+	constructor(private api: WebAPI, private ea: EventAggregator, private controller: ValidationController) { 
+    this.controller.addRenderer(new BootstrapFormRenderer());
+  }
 
 	activate(params, routeConfig) {
     this.routeConfig = routeConfig;
@@ -34,7 +39,7 @@ export class ApplicantDetails {
 
       return this.api.getApplicantDetails(params.id).then(applicant => {
         this.applicant = <Applicant>applicant;
-        this.routeConfig.navModel.setTitle(this.applicant.name);
+        this.routeConfig.navModel.setTitle(`${ this.applicant.name } ${ this.applicant.familyName }`);
         this.originalApplicant = JSON.parse(JSON.stringify(this.applicant));
         this.ea.publish(new ApplicantViewed(this.applicant));
       });
@@ -48,27 +53,25 @@ export class ApplicantDetails {
 
 	}
 
-	get canSave() {
+	get canSave(): boolean {
 		return this.applicant.name && this.applicant.familyName && !this.api.isRequesting;
 	}
 
-	save() {
+	save(): void {
     if(this.isNewApplicant)
     {
-      this.api.createApplicant(this.applicant).then(url => {
-        this.ea.publish(new ApplicantCreated(url));
-      });
+      this.api.createApplicant(this.applicant).then(url => this.routeConfig
+        .navModel.router.navigateToRoute('success', {id: this.getId(<string>url)}));
     }else{
       this.api.saveApplicant(this.applicant).then(applicant => {
         this.applicant = <Applicant>applicant;
-        this.routeConfig.navModel.setTitle(this.applicant.name);
-        this.originalApplicant = JSON.parse(JSON.stringify(this.applicant));
-        this.ea.publish(new ApplicantUpdated(this.applicant));
+        this.originalApplicant = this.applicant;
+        this.routeConfig.navModel.router.navigateToRoute('success', {id: this.applicant.id});
       });
     }
 	}
 
-	delete() {
+	delete(): void {
     if(this.isNewApplicant)
     {
       this.api.createApplicant(this.applicant).then(url => {
@@ -83,9 +86,9 @@ export class ApplicantDetails {
     }
 	}
 
-	canDeactivate() {
+	canDeactivate(): boolean {
 		if(!areEqual(this.originalApplicant, this.applicant)) {
-			let result = confirm('You have unsaved changes, Are you sure you wish to leave?');
+			const result = confirm('You have unsaved changes, Are you sure you wish to leave?');
 
 			if(!result) {
 				this.ea.publish(new ApplicantViewed(this.applicant));
@@ -95,5 +98,19 @@ export class ApplicantDetails {
 		}
 		
 		return true;
-	}
+  }
+  
+  reset(): void {
+    const result = confirm('This will reset all the data. \n Are you sure?');
+
+    if(!result) {
+      this.ea.publish(new ApplicantViewed(this.applicant));
+    }else{
+      this.applicant = <Applicant>{};
+    }
+  }
+
+  getId(url: string): string {
+    return url.replace('/applicant/', '');
+  }
 }

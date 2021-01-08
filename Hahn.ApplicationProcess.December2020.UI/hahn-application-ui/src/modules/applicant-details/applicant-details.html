@@ -56,8 +56,11 @@
 					</div>
 				</div>
 			</form>
-			<div>
-				<button class="btn btn-success float-right" click.delegate="save()" disabled.bind="!canSave">Save</button>
+			<div class="form-group row">
+        <div class="col-md-12 text-right">
+          <button class="btn btn-danger" click.delegate="reset()" disabled.bind="!canSave">Reset</button>
+          <button class="btn btn-success" click.delegate="save()" disabled.bind="!canSave">Send</button>
+        </div>
 			</div>
 		</div>
 	</div>

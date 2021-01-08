@@ -1,6 +1,15 @@
+
 export class ApplicationSuccess {
-  public heading = "Success";
-  public message = "Application was successfully submitted";
-  public call1 = "View Application";
-  public call2 = "Submit Another Application";
+  heading = "Success";
+  message = "Application was successfully submitted";
+  call1 = "View Application";
+  call2 = "Submit Another Application";
+
+  public id: number;
+  public viewReady: boolean = false;
+
+  activate(params)
+  {
+    this.id = params.id;
+  }
 }

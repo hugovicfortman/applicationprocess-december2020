@@ -1,5 +1,5 @@
 export class ApplicantCreated {
-	constructor(public applicant) { }
+	constructor(public url) { }
 }
 
 export class ApplicantViewed {
