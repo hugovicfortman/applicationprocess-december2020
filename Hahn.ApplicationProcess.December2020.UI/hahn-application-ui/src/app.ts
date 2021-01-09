@@ -1,14 +1,14 @@
+import { ApplicantService } from 'services/applicants';
 import { EventAggregator } from 'aurelia-event-aggregator';
 import { Router, RouterConfiguration } from 'aurelia-router';
-import { inject, PLATFORM } from 'aurelia-framework';
-import { WebAPI } from './resources/web-api';
+import { autoinject, PLATFORM } from 'aurelia-framework';
 
-@inject(WebAPI, EventAggregator)
+@autoinject
 export class App {
   router: Router;
   
 
-  constructor(public api: WebAPI, private ea: EventAggregator) {}
+  constructor(public appService: ApplicantService, private ea: EventAggregator) {}
 	
 	configureRouter(config: RouterConfiguration, router: Router) {
 		config.title = 'Hahn Softwareentwicklung';

@@ -1,43 +1,65 @@
-import { inject, NewInstance } from 'aurelia-framework';
+import { ApplicantService } from './../../services/applicants';
+import { Prompt } from './../prompt/prompt';
+import { Applicant } from './../../models/applicant';
+import { autoinject, inject } from 'aurelia-framework';
 import { EventAggregator } from 'aurelia-event-aggregator';
-import { WebAPI } from '../../resources/web-api';
 import { areEqual } from '../../resources/utility';
 import { ApplicantCreated, ApplicantViewed, ApplicantUpdated, ApplicantDeleted } from '../../services/messages';
-import { BootstrapFormRenderer } from 'aurelia-form-renderer-bootstrap';
-import { ValidationRules, ValidationController } from 'aurelia-validation';
+import { BootstrapFormRenderer } from '../../resources/bootstrap-form-renderer';
+import { ValidationRules, ValidationControllerFactory, ValidationController, validateTrigger } from 'aurelia-validation';
 
-interface Applicant {
-  id: number;
-  age: number;
-  hired: boolean;
-  name: string;
-  familyName: string;
-  countryOfOrigin: string;
-  address: string;
-  emailAddress: string;
-}
-
-@inject(WebAPI, EventAggregator, NewInstance.of(ValidationController))
+@autoinject
 export class ApplicantDetails {
-	routeConfig;
-	applicant: Applicant ;
+  routeConfig;
+
+  controller : ValidationController;
+  renderer: BootstrapFormRenderer;
+
   originalApplicant: Applicant;
   isNewApplicant: boolean;
+  validationRules: ValidationRules;
 
   public title = "Applicant";
 
-	constructor(private api: WebAPI, private ea: EventAggregator, private controller: ValidationController) { 
-    this.controller.addRenderer(new BootstrapFormRenderer());
+  constructor(private appService: ApplicantService, 
+              private ea: EventAggregator, 
+              private controllerFactory: ValidationControllerFactory, 
+              private applicant: Applicant, 
+              private prompt: Prompt) { 
+    this.applicant = applicant;
+    this.controller = this.controllerFactory.createForCurrentScope();
+    this.controller.addObject(this.applicant);
+    this.controller.validateTrigger = validateTrigger.manual;
+    this.renderer = new BootstrapFormRenderer();
   }
 
-	activate(params, routeConfig) {
+  configureValidationRules(): void {
+    
+    ValidationRules
+      .ensure((a: Applicant) => a.age).displayName('Age').required().between(20, 60)
+      .ensure((a: Applicant) => a.hired).displayName('Hired').required()
+      .ensure((a: Applicant) => a.name).displayName('Name').required().minLength(5)
+      .ensure((a: Applicant) => a.familyName).displayName('Family Name').required().minLength(5)
+      .ensure((a: Applicant) => a.countryOfOrigin).displayName('Country of Origin').required()
+      .ensure((a: Applicant) => a.address).displayName('Address').required().minLength(10)
+      .ensure((a: Applicant) => a.emailAddress).displayName('Email Address').email().required().
+      on(Applicant);
+  }
+
+  bind(): void
+  {
+    this.controller.addRenderer(this.renderer);
+    this.configureValidationRules();
+  }
+
+	activate(params: any, routeConfig: any): any {
     this.routeConfig = routeConfig;
 
     if(params.id)
     {
       this.isNewApplicant = false;
 
-      return this.api.getApplicantDetails(params.id).then(applicant => {
+      return this.appService.getApplicantDetails(params.id).then(applicant => {
         this.applicant = <Applicant>applicant;
         this.routeConfig.navModel.setTitle(`${ this.applicant.name } ${ this.applicant.familyName }`);
         this.originalApplicant = JSON.parse(JSON.stringify(this.applicant));
@@ -54,63 +76,86 @@ export class ApplicantDetails {
 	}
 
 	get canSave(): boolean {
-		return this.applicant.name && this.applicant.familyName && !this.api.isRequesting;
+		return this.applicant.name && this.applicant.familyName && !this.appService.isRequesting;
 	}
 
 	save(): void {
-    if(this.isNewApplicant)
-    {
-      this.api.createApplicant(this.applicant).then(url => this.routeConfig
-        .navModel.router.navigateToRoute('success', {id: this.getId(<string>url)}));
-    }else{
-      this.api.saveApplicant(this.applicant).then(applicant => {
-        this.applicant = <Applicant>applicant;
-        this.originalApplicant = this.applicant;
-        this.routeConfig.navModel.router.navigateToRoute('success', {id: this.applicant.id});
-      });
-    }
+    this.controller.validate().then(result => {
+      if(result.valid) {
+        if(this.isNewApplicant)
+        {
+          this.appService.createApplicant(this.applicant)
+          .then(url => this.routeConfig.navModel.router
+                  .navigateToRoute('success', {id: this.getId(<string>url)}))
+          .catch(err => console.log(err));
+        }else{
+          this.appService.updateApplicant(this.applicant.id, this.applicant).then(applicant => {
+            this.applicant = <Applicant>applicant;
+            this.originalApplicant = this.applicant;
+            this.routeConfig.navModel.router.navigateToRoute('success', {id: this.applicant.id});
+          });
+        }
+      }
+    });
 	}
 
 	delete(): void {
-    if(this.isNewApplicant)
-    {
-      this.api.createApplicant(this.applicant).then(url => {
-        this.ea.publish(new ApplicantCreated(url));
-      });
-    }else{
-      this.api.deleteApplicant(this.applicant).then(applicant => {
-        this.applicant = <Applicant>applicant;
-        this.originalApplicant = JSON.parse(JSON.stringify(this.applicant));
-        this.ea.publish(new ApplicantDeleted(this.applicant));
-      });
-    }
+    this.prompt.confirm('Are you sure you wish to delete this applicant?')
+      .then((confirmed: boolean) => {
+        if(confirmed)
+        {
+          this.appService.deleteApplicant(this.applicant.id).then(applicant => {
+            this.applicant = <Applicant>applicant;
+            this.originalApplicant = JSON.parse(JSON.stringify(this.applicant));
+            this.ea.publish(new ApplicantDeleted(this.applicant));
+          });
+        }
+    });
 	}
 
-	canDeactivate(): boolean {
-		if(!areEqual(this.originalApplicant, this.applicant)) {
-			const result = confirm('You have unsaved changes, Are you sure you wish to leave?');
-
-			if(!result) {
-				this.ea.publish(new ApplicantViewed(this.applicant));
-			}
-	
-			return result;
-		}
-		
-		return true;
-  }
-  
+  /**
+   * Resets the applicant form by clearing all fields
+   */
   reset(): void {
-    const result = confirm('This will reset all the data. \n Are you sure?');
-
-    if(!result) {
-      this.ea.publish(new ApplicantViewed(this.applicant));
-    }else{
-      this.applicant = <Applicant>{};
-    }
+    this.prompt.confirm('This will reset all the data. \n Are you sure?')
+      .then(confirmed => {
+        if(!confirmed) {
+          this.ea.publish(new ApplicantViewed(this.applicant));
+        }else{
+          this.applicant = <Applicant>{};
+        }
+      });
   }
 
+  /**
+   * Extracts Id from response URL on successful applicant creation
+   * @param url URL returned from server when a new applicant is created
+   */
   getId(url: string): string {
     return url.replace('/applicant/', '');
   }
+
+  unbind(): void
+  {
+    this.controller.removeRenderer(this.renderer);
+  }
+
+  /**
+   * Returns a boolean indicating whether page can exit or must be retained.
+   */
+	canDeactivate(): Promise<boolean> {
+    return new Promise((resolve) => {
+      if(!areEqual(this.originalApplicant, this.applicant)) {
+        return this.prompt.confirm('You have unsaved changes, Are you sure you wish to leave?')
+          .then((confirmed: boolean) => {
+              if(!confirmed) {
+                this.ea.publish(new ApplicantViewed(this.applicant));
+              }
+              resolve(confirmed);
+          });
+      }
+      resolve(true);
+    });
+  }
+
 }

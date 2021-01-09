@@ -1,0 +1,13 @@
+<template>
+  <ux-dialog>
+    <ux-dialog-body>
+      <h2>${ prompt.title }</h2>
+      <p>${ prompt.message }</p>
+    </ux-dialog-body>
+
+    <ux-dialog-footer>
+      <button if.bind="prompt.isDialog" click.trigger="ct.cancel()">${ prompt.no }</button>
+      <button click.trigger="ct.ok()">${ prompt.yes }</button>
+    </ux-dialog-footer>
+  </ux-dialog>
+</template>

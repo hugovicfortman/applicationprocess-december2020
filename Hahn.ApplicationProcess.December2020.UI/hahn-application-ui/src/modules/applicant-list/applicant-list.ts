@@ -1,16 +1,17 @@
+import { ApplicantService } from './../../services/applicants';
 import { EventAggregator } from 'aurelia-event-aggregator';
-import { WebAPI } from '../../resources/web-api';
 import { ApplicantViewed, ApplicantUpdated } from '../../services/messages';
-import { inject } from 'aurelia-framework';
+import { autoinject } from 'aurelia-framework';
 
-@inject(WebAPI, EventAggregator)
+@autoinject
 export class ApplicantList {
 	applicants;
 	selectedId = 0;
 
-	constructor(private api: WebAPI, private ea: EventAggregator) {}
+	constructor(private appService: ApplicantService, private ea: EventAggregator) {
+  }
 
 	created() {
-		this.api.getApplicantsList().then(applicants => this.applicants = applicants);
+		this.appService.getApplicantsList().then(applicants => this.applicants = applicants);
 	}
 }

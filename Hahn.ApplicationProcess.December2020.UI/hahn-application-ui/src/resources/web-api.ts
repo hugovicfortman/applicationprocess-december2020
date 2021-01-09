@@ -1,155 +1,97 @@
-let latency = 200;
-let id = 0;
+import { HttpClient, json } from 'aurelia-fetch-client';
 
-function getId(){
-  return ++id;
-}
+const httpClient = new HttpClient();
 
-let applicants = [
-  {
-    id:getId(),
-    age: 45,
-    hired:true,
-    name:'Bilbo',
-    familyName:'Baggings',
-    countryOfOrigin: 'The Shire',
-    address:'House 2, Bag End, The Shire, Middle Earth',
-    emailAddress:'bilbobaggings@shire.com'
-  },
-  {
-    id:getId(),
-    age: 25,
-    hired:true,
-    name:'Frodo',
-    familyName:'Baggings',
-    countryOfOrigin: 'The Shire',
-    address:'House 2, Bag End, The Shire, Middle Earth',
-    emailAddress:'frodobaggings@shire.com'
-  },
-  {
-    id:getId(),
-    age: 30,
-    hired:true,
-    name:'Samwise',
-    familyName:'Gamji',
-    countryOfOrigin: 'The Shire',
-    address:'House 12, Honeysuckle Lane, The Shire, Middle Earth',
-    emailAddress:'samwisegamji@shire.com'
-  },
-  {
-    id:getId(),
-    age: 22,
-    hired:true,
-    name:'Peregrin',
-    familyName:'Took',
-    countryOfOrigin: 'The Shire',
-    address:'House 5, Wadsbottom Lane, The Shire, Middle Earth',
-    emailAddress:'pippin@shire.com'
-  },
-  {
-    id:getId(),
-    age: 22,
-    hired:true,
-    name:'Merridew',
-    familyName:'Maus',
-    countryOfOrigin: 'The Shire',
-    address:'House 7, Wadsbottom Lane, The Shire, Middle Earth',
-    emailAddress:'merry@shire.com'
-  }
-];
+// .NETCORE configuration will be used here...
+
+// httpClient.configure(config => {
+//   config
+//     .useStandardConfiguration()
+//     .withBaseUrl('api/')
+//     .withDefaults({
+//       credentials: 'same-origin',
+//       headers: {
+//         'X-Requested-With': 'Fetch'
+//       }
+//     })
+//     .withInterceptor({
+//       request(request) {
+//         let authHeader = fakeAuthService.getAuthHeaderValue(request.url);
+//         request.headers.append('Authorization', authHeader);
+//         return request;
+//       }
+//     });
+// });
+
 
 export class WebAPI {
-  isRequesting = false;
   
-  getApplicantsList(){
-    this.isRequesting = true;
-    return new Promise(resolve => {
-      setTimeout(() => {
-        let results = applicants.map(x =>  { return {
-          id:x.id,
-          age: x.age,
-          hired: x.hired,
-          name: x.name,
-          familyName: x.familyName,
-          countryOfOrigin: x.countryOfOrigin,
-          address: x.address,
-          emailAddress: x.emailAddress
-        }});
-        resolve(results);
-        this.isRequesting = false;
-      }, latency);
-    });
+  get<T>(url: string, { body = undefined } = {}): Promise<T>
+  {
+    if(body)
+    {
+      let i = 0;
+      for(let part of body)
+      {
+        url += `${ (i == 0)? '?': '&' }${ part }=${ body[part] }`;
+        i++;
+      }
+    }
+    return httpClient
+      .fetch(url, {
+        method: 'get'
+      })
+      .then(response => response.json())
+      .then(obj => <T> obj)
+      .catch(err => {
+        console.log(err);
+        throw Error(`WebAPI error: ${err}`);
+      });
+  }
+  
+  post<T>(url: string, {body}): Promise<T>
+  {
+    return httpClient
+      .fetch(url, {
+        method: 'post',
+        body: json(body)
+      })
+      .then(response => response.json())
+      .then(obj => <T> obj)
+      .catch(err => {
+        console.log(err);
+        throw Error(`WebAPI error: ${err}`);
+      });
   }
 
-  getApplicantDetails(id){
-    this.isRequesting = true;
-    return new Promise(resolve => {
-      setTimeout(() => {
-        let found = applicants.filter(x => x.id == id)[0];
-        resolve(JSON.parse(JSON.stringify(found)));
-        this.isRequesting = false;
-      }, latency);
-    });
+  put<T>(url: string, {body}): Promise<T>
+  {
+    return httpClient
+      .fetch(url, {
+        method: 'post',
+        body: json(body)
+      })
+      .then(response => response.json())
+      .then(obj => <T> obj)
+      .catch(err => {
+        console.log(err);
+        throw Error(`WebAPI error: ${err}`);
+      });
   }
 
-  saveApplicant(applicant){
-    this.isRequesting = true;
-    return new Promise(resolve => {
-      setTimeout(() => {
-        let instance = JSON.parse(JSON.stringify(applicant));
-        let found = applicants.filter(x => x.id == applicant.id)[0];
-
-        if(found){
-          let index = applicants.indexOf(found);
-          applicants[index] = instance;
-        }else{
-          instance.id = getId();
-          applicants.push(instance);
-        }
-
-        this.isRequesting = false;
-        resolve(instance);
-      }, latency);
-    });
+  delete<T>(url: string, {body}): Promise<T>
+  {
+    return httpClient
+      .fetch(url, {
+        method: 'delete',
+        body: json(body)
+      })
+      .then(response => response.json())
+      .then(obj => <T> obj)
+      .catch(err => {
+        console.log(err);
+        throw Error(`WebAPI error: ${err}`);
+      });
   }
 
-  createApplicant(applicant){
-    this.isRequesting = true;
-    return new Promise(resolve => {
-      setTimeout(() => {
-        let instance = JSON.parse(JSON.stringify(applicant));
-        let found = applicants.filter(x => x.id == applicant.id)[0];
-
-        if(found){
-          let index = applicants.indexOf(found);
-          applicants[index] = instance;
-        }else{
-          instance.id = getId();
-          applicants.push(instance);
-        }
-
-        this.isRequesting = false;
-        resolve(`/applicant/${ instance.id }`);
-      }, latency);
-    });
-  }
-
-  deleteApplicant(applicant){
-    this.isRequesting = true;
-    return new Promise(resolve => {
-      setTimeout(() => {
-        let instance = JSON.parse(JSON.stringify(applicant));
-        let found = applicants.filter(x => x.id == applicant.id)[0];
-
-        if(found){
-          let index = applicants.indexOf(found);
-          applicants.splice(index, 1);
-          resolve(instance);
-        }else{
-          resolve(null);
-        }
-        this.isRequesting = false;
-      }, latency);
-    });
-  }
 }
