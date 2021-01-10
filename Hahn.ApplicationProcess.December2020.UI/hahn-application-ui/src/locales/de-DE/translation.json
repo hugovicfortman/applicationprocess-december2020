@@ -1,0 +1,8 @@
+{
+  "score": "Mark: {{score}}",
+  "lives": "{{count}} life gehabt",
+  "lives_plural": "{{count}} lives gehabt",
+  "friend": "Ein Freund",
+  "friend_male": "Ein Freund",
+  "friend_female": "Eine Freundin"
+}

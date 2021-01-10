@@ -16,7 +16,6 @@ export class Prompt {
     this.prompt.message = prompt.message;
     this.prompt.no = prompt.no;
     this.prompt.yes = prompt.yes;
-    console.log(prompt);
   }
 
 

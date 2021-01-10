@@ -15,7 +15,7 @@ const applicants :Applicant[] = [
     hired:true,
     name:'Bilbo',
     familyName:'Baggings',
-    countryOfOrigin: 'The Shire',
+    countryOfOrigin: 'the shire',
     address:'House 2, Bag End, The Shire, Middle Earth',
     emailAddress:'bilbobaggings@shire.com'
   },
@@ -25,7 +25,7 @@ const applicants :Applicant[] = [
     hired:true,
     name:'Frodo',
     familyName:'Baggings',
-    countryOfOrigin: 'The Shire',
+    countryOfOrigin: 'the shire',
     address:'House 2, Bag End, The Shire, Middle Earth',
     emailAddress:'frodobaggings@shire.com'
   },
@@ -35,7 +35,7 @@ const applicants :Applicant[] = [
     hired:true,
     name:'Samwise',
     familyName:'Gamji',
-    countryOfOrigin: 'The Shire',
+    countryOfOrigin: 'the shire',
     address:'House 12, Honeysuckle Lane, The Shire, Middle Earth',
     emailAddress:'samwisegamji@shire.com'
   },
@@ -45,7 +45,7 @@ const applicants :Applicant[] = [
     hired:true,
     name:'Peregrin',
     familyName:'Took',
-    countryOfOrigin: 'The Shire',
+    countryOfOrigin: 'the shire',
     address:'House 5, Wadsbottom Lane, The Shire, Middle Earth',
     emailAddress:'pippin@shire.com'
   },
@@ -55,7 +55,7 @@ const applicants :Applicant[] = [
     hired:true,
     name:'Merridew',
     familyName:'Maus',
-    countryOfOrigin: 'The Shire',
+    countryOfOrigin: 'the shire',
     address:'House 7, Wadsbottom Lane, The Shire, Middle Earth',
     emailAddress:'merry@shire.com'
   }
@@ -83,10 +83,14 @@ export class ApplicantsAPILocal implements IApplicantsAPI {
   }
 
   getApplicantDetails(id: number): Promise<Applicant>{
-    return new Promise(resolve => {
+    return new Promise((resolve, reject) => {
       setTimeout(() => {
-        const found = applicants.filter(x => x.id == id)[0];
-        resolve(JSON.parse(JSON.stringify(found)));
+        try {
+          const found = applicants.filter(x => x.id == id)[0];
+          resolve(JSON.parse(JSON.stringify(found)));
+        } catch (error) {
+          reject(error);
+        }
       }, latency);
     });
   }
