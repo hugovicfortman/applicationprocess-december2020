@@ -1,3 +1,4 @@
+import { I18N } from 'aurelia-i18n';
 import { autoinject } from 'aurelia-framework';
 import { DialogController, DialogService } from 'aurelia-dialog';
 import './prompt.css';
@@ -8,7 +9,8 @@ export class Prompt {
   private prompt =  <IPrompt>{};
 
   constructor(private ct: DialogController, 
-    private ds: DialogService){}
+    private ds: DialogService,
+    private i18n: I18N){}
   
   activate(prompt: IPrompt): void{
     this.prompt.isDialog = prompt.isDialog;
@@ -27,7 +29,7 @@ export class Prompt {
    * and no responses
    */
 
-  confirm(message: string, { title, strYes, strNo } = { title: "Confirm", strYes: "Yes", strNo: "No" }) : Promise<boolean> {
+  confirm(message: string, { title, strYes, strNo } = { title: this.i18n.tr('messages.confirm'), strYes: this.i18n.tr('commands.yes'), strNo: this.i18n.tr('commands.no') }) : Promise<boolean> {
     return new Promise((resolve) =>
     this.ds.open({ viewModel: Prompt, model: {
       isDialog: true,
@@ -44,7 +46,7 @@ export class Prompt {
    * @param message Message to be displayed to user
    * @param param1 Optional properties including title and a string identifier for yes
    */
-  alert(message: string, { title, strYes } = { title: "Message", strYes: "OK" }) : Promise<boolean>{
+  alert(message: string, { title, strYes } = { title: this.i18n.tr('messages.message'), strYes: this.i18n.tr('commands.ok') }) : Promise<boolean>{
     return new Promise((resolve) => 
     this.ds.open({ viewModel: Prompt, model: {
       isDialog: false,

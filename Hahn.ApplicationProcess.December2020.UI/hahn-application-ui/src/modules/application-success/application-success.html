@@ -1,12 +1,12 @@
 <template>
   <div class="text-center">
-    <h2>${ heading }</h2>
+    <h2>${ 'messages.success' | t }</h2>
     <p>
-      ${ message }
+      ${ 'messages.success' | t: { context: 'application' } }
     </p>
     <div class="form-group">
-      <a class="btn btn-primary" route-href="route: applicant; params.bind:{ id: id }">${ call1 }</a>
-      <a class="btn btn-light" route-href="route: new;">${ call2 }</a>
+      <a class="btn btn-primary" route-href="route: applicant; params.bind:{ id: id }">${ 'commands.application' | t: { context: 'view' } }</a>
+      <a class="btn btn-light" route-href="route: new;">${ 'commands.application' | t: { context: 'new' } }</a>
     </div>
   </div>
 </template>

@@ -34,14 +34,9 @@ a:focus {
     margin: 12px 24px 0 6px;
 }
 
-.no-selection {
-  margin: 20px;
-}
-
-.contact-list {
-  overflow-y: auto;
-  border: 1px solid #ddd;
-  padding: 10px;
+.help-block{
+  float:left;
+  clear:both;
 }
 
 .panel {

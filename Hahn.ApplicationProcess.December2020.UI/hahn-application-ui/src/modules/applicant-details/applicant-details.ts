@@ -1,15 +1,15 @@
 import { ApplicantService } from './../../services/applicants';
 import { CountriesService } from './../../services/countries';
-import { Prompt } from './../prompt/prompt';
 import { Applicant } from './../../models/applicant';
 import { areEqual } from '../../resources/utility';
 import { ApplicantCreated, ApplicantViewed, ApplicantUpdated, ApplicantDeleted } from '../../services/messages';
 import { BootstrapFormRenderer } from '../../resources/bootstrap-form-renderer';
+import { Prompt } from 'resources/elements/prompt/prompt';
 
-import {I18N} from 'aurelia-i18n';
 import { autoinject, inject } from 'aurelia-framework';
 import { EventAggregator } from 'aurelia-event-aggregator';
 import { ValidationRules, Validator,  ValidationControllerFactory, ValidationController, validateTrigger, ResultInstruction } from 'aurelia-validation';
+import { I18N } from 'aurelia-i18n';
 
 @autoinject
 export class ApplicantDetails {
@@ -44,14 +44,74 @@ export class ApplicantDetails {
   configureValidationRules(): void {
     
     ValidationRules
-      .ensure((a: Applicant) => a.age).displayName('Age').required().between(20, 60)
-      .ensure((a: Applicant) => a.hired).displayName('Hired').required()
-      .ensure((a: Applicant) => a.name).displayName('Name').required().minLength(5)
-      .ensure((a: Applicant) => a.familyName).displayName('Family Name').required().minLength(5)
-      .ensure((a: Applicant) => a.countryOfOrigin).displayName('Country of Origin').required()
-      .ensure((a: Applicant) => a.address).displayName('Address').required().minLength(10)
-      .ensure((a: Applicant) => a.emailAddress).displayName('Email Address').email().required().
-      on(this.applicant);
+      .ensure((a: Applicant) => a.age)
+        .displayName(this.i18n.tr('models.applicant.age'))
+        .required()
+          .withMessage(this.i18n.tr('messages.validation.is_required', {
+              'field': this.i18n.tr('models.applicant.age')
+            }))
+        .between(20, 60)
+          .withMessage(this.i18n.tr('messages.validation.in_between', {
+            'field': this.i18n.tr('models.applicant.age'),
+            'lower_limit': 20,
+            'upper_limit': 60
+          }))
+      .ensure((a: Applicant) => a.hired)
+        .displayName(this.i18n.tr('models.applicant.hired'))
+        .required()
+          .withMessage(this.i18n.tr('messages.validation.is_required', {
+              'field': this.i18n.tr('models.applicant.hired')
+            }))
+      .ensure((a: Applicant) => a.name)
+        .displayName(this.i18n.tr('models.applicant.name'))
+        .required()
+          .withMessage(this.i18n.tr('messages.validation.is_required', {
+              'field': this.i18n.tr('models.applicant.name')
+            }))
+        .minLength(5)
+          .withMessage(this.i18n.tr('messages.validation.min_length', {
+              'field': this.i18n.tr('models.applicant.name'),
+              'min_count': 5
+            }))
+      .ensure((a: Applicant) => a.familyName)
+        .displayName(this.i18n.tr('models.applicant.familyName'))
+        .required()
+          .withMessage(this.i18n.tr('messages.validation.is_required', {
+              'field': this.i18n.tr('models.applicant.familyName')
+            }))
+        .minLength(5)
+          .withMessage(this.i18n.tr('messages.validation.min_length', {
+              'field': this.i18n.tr('models.applicant.familyName'),
+              'min_count': 5
+            }))
+      .ensure((a: Applicant) => a.countryOfOrigin)
+        .displayName(this.i18n.tr('models.applicant.countryOfOrigin'))
+        .required()
+          .withMessage(this.i18n.tr('messages.validation.is_required', {
+              'field': this.i18n.tr('models.applicant.countryOfOrigin')
+            }))
+      .ensure((a: Applicant) => a.address)
+        .displayName(this.i18n.tr('models.applicant.address'))
+        .required()
+          .withMessage(this.i18n.tr('messages.validation.is_required', {
+              'field': this.i18n.tr('models.applicant.address')
+            }))
+        .minLength(10)
+          .withMessage(this.i18n.tr('messages.validation.min_length', {
+              'field': this.i18n.tr('models.applicant.address'),
+              'min_count': 10
+            }))
+      .ensure((a: Applicant) => a.emailAddress)
+        .displayName(this.i18n.tr('models.applicant.emailAddress'))
+        .email()
+          .withMessage(this.i18n.tr('messages.validation.valid_email', {
+              'field': this.i18n.tr('models.applicant.emailAddress')
+            }))
+        .required()
+          .withMessage(this.i18n.tr('messages.validation.is_required', {
+              'field': this.i18n.tr('models.applicant.emailAddress')
+            }))
+      .on(this.applicant);
   }
 
 
@@ -149,7 +209,7 @@ export class ApplicantDetails {
    * Resets the applicant form by clearing all fields
    */
   reset(): void {
-    this.prompt.confirm('This will reset all the data. \n Are you sure?')
+    this.prompt.confirm(this.i18n.tr('messages.confirm',{context: 'reset'}))
       .then(confirmed => {
         if(!confirmed) {
           this.ea.publish(new ApplicantViewed(this.applicant));
@@ -179,7 +239,7 @@ export class ApplicantDetails {
     return new Promise((resolve) => {
       if((this.isNewApplicant && this.canReset) || 
             !areEqual(this.originalApplicant, this.applicant)) {
-        return this.prompt.confirm('You have unsaved changes, Are you sure you wish to leave?')
+        return this.prompt.confirm(this.i18n.tr('messages.confirm',{context: 'exit'}))
           .then((confirmed: boolean) => {
               if(!confirmed) {
                 this.ea.publish(new ApplicantViewed(this.applicant));
