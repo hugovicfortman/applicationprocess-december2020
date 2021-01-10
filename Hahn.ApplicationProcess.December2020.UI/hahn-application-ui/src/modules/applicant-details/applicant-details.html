@@ -46,8 +46,7 @@
 					<div class="col-md-9">
 						<select class="form-control" value.bind="applicant.countryOfOrigin">
               <option>Country of Origin</option>
-              <option value="rohan">Rohan</option>
-              <option value="gondor">Gondor</option>
+              <option repeat.for="country of countries" value="${ country.value }">${ country.name }</option>
             </select>
 					</div>
 				</div>

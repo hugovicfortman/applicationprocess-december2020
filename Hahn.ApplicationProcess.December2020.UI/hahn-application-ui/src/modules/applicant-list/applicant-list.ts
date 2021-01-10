@@ -11,7 +11,7 @@ export class ApplicantList {
 	constructor(private appService: ApplicantService, private ea: EventAggregator) {
   }
 
-	created() {
+	created():void {
 		this.appService.getApplicantsList().then(applicants => this.applicants = applicants);
 	}
 }

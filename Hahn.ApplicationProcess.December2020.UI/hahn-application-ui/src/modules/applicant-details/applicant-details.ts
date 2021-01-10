@@ -1,4 +1,5 @@
 import { ApplicantService } from './../../services/applicants';
+import { CountriesService } from './../../services/countries';
 import { Prompt } from './../prompt/prompt';
 import { Applicant } from './../../models/applicant';
 import { autoinject, inject } from 'aurelia-framework';
@@ -14,14 +15,16 @@ export class ApplicantDetails {
 
   controller : ValidationController;
   renderer: BootstrapFormRenderer;
+  validationRules: ValidationRules;
 
   originalApplicant: Applicant;
   isNewApplicant: boolean;
-  validationRules: ValidationRules;
+  countries;
 
   public title = "Applicant";
 
   constructor(private appService: ApplicantService, 
+              private cs: CountriesService, 
               private ea: EventAggregator, 
               private controllerFactory: ValidationControllerFactory, 
               private applicant: Applicant, 
@@ -29,7 +32,7 @@ export class ApplicantDetails {
     this.applicant = applicant;
     this.controller = this.controllerFactory.createForCurrentScope();
     this.controller.addObject(this.applicant);
-    this.controller.validateTrigger = validateTrigger.manual;
+    // this.controller.validateTrigger = validateTrigger.manual;
     this.renderer = new BootstrapFormRenderer();
   }
 
@@ -45,14 +48,15 @@ export class ApplicantDetails {
       .ensure((a: Applicant) => a.emailAddress).displayName('Email Address').email().required().
       on(Applicant);
   }
-
+  
   bind(): void
   {
+    this.cs.getCountries().then(c => this.countries = c);
     this.controller.addRenderer(this.renderer);
     this.configureValidationRules();
   }
 
-	activate(params: any, routeConfig: any): any {
+	activate(params, routeConfig): Promise<void> {
     this.routeConfig = routeConfig;
 
     if(params.id)
