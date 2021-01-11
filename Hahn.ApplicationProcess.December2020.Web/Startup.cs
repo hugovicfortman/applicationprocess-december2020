@@ -60,7 +60,7 @@ namespace Hahn.ApplicationProcess.December2020.Web
             
             services.AddTransient<CountryHelper>();
             services.AddTransient<ApplicantComponent>();
-            services.AddTransient<IEnityData, ApplicantData>();
+            services.AddTransient<IEntityData<Applicant>, ApplicantData>();
             services.AddTransient<IValidator<Applicant>, ApplicantValidator>();
             
 
