@@ -1,3 +1,8 @@
+using System;
+using System.Linq;
+using System.Net.Http;
+using System.Threading.Tasks;
+using System.Collections.Generic;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -7,10 +12,18 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using FluentValidation;
+using FluentValidation.AspNetCore;
+using Microsoft.EntityFrameworkCore;
+// Peer Dependencies...
+using Hahn.ApplicationProcess.December2020.Domain.Models;
+using Hahn.ApplicationProcess.December2020.Infrastructure.Helper;
+using Hahn.ApplicationProcess.December2020.Infrastructure.Interface;
+using Hahn.ApplicationProcess.December2020.Domain.Logic.Validator;
+using Hahn.ApplicationProcess.December2020.Domain.Logic.Component;
+using Hahn.ApplicationProcess.December2020.Data.Entity;
+using Hahn.ApplicationProcess.December2020.Data.Context;
+using Hahn.ApplicationProcess.December2020.Web.Seeding;
 
 namespace Hahn.ApplicationProcess.December2020.Web
 {
@@ -28,6 +41,29 @@ namespace Hahn.ApplicationProcess.December2020.Web
         {
 
             services.AddControllers();
+            services.AddMvc(setup => {
+                //...mvc setup...
+            }).AddFluentValidation();
+
+            // // In memory db is advised against in Microsoft Documentation..
+            // // Preferrably, use SQLITE.
+            // services.AddDbContext<ApplicantContext>(options =>
+            //         options.UseInMemoryDatabase(o => {
+
+            //         }));
+
+
+            services.AddDbContext<ApplicantContext>(options =>
+                    options.UseSqlite(Configuration.GetConnectionString("DefaultConnection")));
+
+            services.AddSingleton(new HttpClient());
+            
+            services.AddTransient<CountryHelper>();
+            services.AddTransient<ApplicantComponent>();
+            services.AddTransient<IEnityData, ApplicantData>();
+            services.AddTransient<IValidator<Applicant>, ApplicantValidator>();
+            
+
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Hahn.ApplicationProcess.December2020.Web", Version = "v1" });
@@ -41,7 +77,11 @@ namespace Hahn.ApplicationProcess.December2020.Web
             {
                 app.UseDeveloperExceptionPage();
                 app.UseSwagger();
-                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Hahn.ApplicationProcess.December2020.Web v1"));
+                app.UseSwaggerUI(c => {
+                    c.SwaggerEndpoint("/swagger/v1/swagger.json", "Hahn.ApplicationProcess.December2020.Web v1");
+                    c.RoutePrefix = string.Empty;
+                });
+                DbInitializer.Initialize(app);
             }
 
             app.UseHttpsRedirection();
