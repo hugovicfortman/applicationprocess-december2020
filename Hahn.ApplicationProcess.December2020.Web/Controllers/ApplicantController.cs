@@ -38,52 +38,52 @@ namespace Hahn.ApplicationProcess.December2020.Web.Controllers
             return await _applicantComponent.GetApplicant(id);
         }
 
-        // [HttpPost]
-        // public async Task<string> Create(Applicant applicant)
-        // {
-        //     try
-        //     {
-        //         if(! ModelState.IsValid)
-        //         {
-        //             // Return 400 error citing invalid model components
-        //         }
+        [HttpPost]
+        public async Task<string> Create(Applicant applicant)
+        {
+            try
+            {
+                if(! ModelState.IsValid)
+                {
+                    // Return 400 error citing invalid model components
+                }
 
 
-        //         var newApplicant = await _applicantComponent.SaveApplicant(applicant);
-        //         return $"/{newApplicant.ID}";
-        //     }catch(Exception ex)
-        //     {
-        //         // Return an error indicating what fatal error went wrong
-        //         return $"/";
-        //     }
-        // }
+                var newApplicant = await _applicantComponent.SaveApplicant(applicant);
+                return $"/{newApplicant.ID}";
+            }catch(Exception ex)
+            {
+                // Return an error indicating what fatal error went wrong
+                return $"/";
+            }
+        }
 
-        // [HttpPut]
-        // public async Task<Applicant> Modify(int id, Applicant applicant)
-        // {
-        //     try
-        //     {
-        //         return await _applicantComponent.UpdateApplicant(id, applicant);
-        //     }
-        //     catch (Exception ex)
-        //     {
-        //         // Return an error indicating what fatal error went wrong
-        //         return applicant;
-        //     }
-        // }
+        [HttpPut]
+        public async Task<Applicant> Modify(int id, Applicant applicant)
+        {
+            try
+            {
+                return await _applicantComponent.UpdateApplicant(id, applicant);
+            }
+            catch (Exception ex)
+            {
+                // Return an error indicating what fatal error went wrong
+                return applicant;
+            }
+        }
 
-        // [HttpDelete]
-        // public async Task<Applicant> Delete(int id)
-        // {
-        //     try
-        //     {
-        //         return await _applicantComponent.DeleteApplicant(id);
-        //     }
-        //     catch (Exception ex)
-        //     {
-        //         // Return an error indicating what fatal error went wrong
-        //         return null;
-        //     }
-        // }
+        [HttpDelete]
+        public async Task<Applicant> Delete(int id)
+        {
+            try
+            {
+                return await _applicantComponent.DeleteApplicant(id);
+            }
+            catch (Exception ex)
+            {
+                // Return an error indicating what fatal error went wrong
+                return null;
+            }
+        }
     }
 }

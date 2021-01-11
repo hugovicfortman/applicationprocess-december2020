@@ -81,7 +81,7 @@ namespace Hahn.ApplicationProcess.December2020.Web
                     c.SwaggerEndpoint("/swagger/v1/swagger.json", "Hahn.ApplicationProcess.December2020.Web v1");
                     c.RoutePrefix = string.Empty;
                 });
-                DbInitializer.Initialize(app);
+                // DbInitializer.Initialize(app);
             }
 
             app.UseHttpsRedirection();
