@@ -63,6 +63,17 @@ namespace Hahn.ApplicationProcess.December2020.Web
             services.AddTransient<IEntityData<Applicant>, ApplicantData>();
             services.AddTransient<IValidator<Applicant>, ApplicantValidator>();
             
+            
+
+            //services.AddCors(options =>
+            //{
+            //    options.AddPolicy("CorsPolicy", builder => builder
+            //    .WithOrigins("http://localhost:8080")
+            //    .AllowAnyMethod()
+            //    .AllowAnyHeader()
+            //    .AllowCredentials());
+            //});
+
 
             services.AddSwaggerGen(c =>
             {
@@ -93,6 +104,9 @@ namespace Hahn.ApplicationProcess.December2020.Web
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+
+                // Render the SPA
+                endpoints.MapFallbackToController("GET","home");
             });
         }
     }

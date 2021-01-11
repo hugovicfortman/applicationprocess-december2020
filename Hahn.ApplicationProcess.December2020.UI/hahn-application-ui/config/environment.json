@@ -1,4 +1,5 @@
 {
   "debug": true,
-  "testing": true
+  "testing": true,
+  "api_root": "https://localhost:5001/"
 }
