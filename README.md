@@ -78,6 +78,10 @@ In order for this project to connect to the API, uncomment the following lines i
     75      });
     76 /******** Other code... *********/
 
+and
+
+    100     app.UseCors("CorsPolicy");
+
 Doing this enables CORS, cross origin rules for the ui application to connect to and accept data from the web server.
 
 The project is running in testing mode and still uses test data. To change this, modify the `config/environment.json` file by setting `testing` to `false` so that the config shows

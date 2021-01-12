@@ -65,14 +65,14 @@ namespace Hahn.ApplicationProcess.December2020.Web
             
             
 
-            //services.AddCors(options =>
-            //{
-            //    options.AddPolicy("CorsPolicy", builder => builder
-            //    .WithOrigins("http://localhost:8080")
-            //    .AllowAnyMethod()
-            //    .AllowAnyHeader()
-            //    .AllowCredentials());
-            //});
+            services.AddCors(options =>
+            {
+               options.AddPolicy("CorsPolicy", builder => builder
+               .WithOrigins("http://localhost:8080")
+               .AllowAnyMethod()
+               .AllowAnyHeader()
+               .AllowCredentials());
+            });
 
 
             services.AddSwaggerGen(c =>
@@ -96,6 +96,8 @@ namespace Hahn.ApplicationProcess.December2020.Web
             }
 
             app.UseHttpsRedirection();
+
+            app.UseCors("CorsPolicy");
 
             app.UseRouting();
 

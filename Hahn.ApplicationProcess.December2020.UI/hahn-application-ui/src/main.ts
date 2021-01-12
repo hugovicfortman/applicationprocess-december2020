@@ -15,8 +15,8 @@ import * as environment from '../config/environment.json';
 import { PLATFORM } from 'aurelia-pal';
 
 const webApi = new WebAPI();
-const appService = new ApplicantService(new ApplicantsAPILocal());
-const countryService = new CountriesService(new CountriesAPILocal());
+const appService = new ApplicantService((environment.testing)? new ApplicantsAPILocal(): new ApplicantsAPIRemote(webApi, environment.api_root));
+const countryService = new CountriesService((environment.testing)? new CountriesAPILocal(): new CountriesAPIRemote(webApi, environment.countries_api));
 
 export function configure(aurelia: Aurelia): void {
   aurelia.use

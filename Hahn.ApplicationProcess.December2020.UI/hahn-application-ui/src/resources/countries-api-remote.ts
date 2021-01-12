@@ -7,13 +7,13 @@ export class CountriesAPIRemote implements ICountriesAPI {
   
   public countries:Country[];
 
-  constructor(private api: WebAPI) {}
+  constructor(private api: WebAPI, private apiBaseUrl: string) {}
 
   getCountries(): Promise<Country[]> {
     if(!this.countries)
     {
       return this.api
-                .get<Country[]>("https://restcountries.eu/rest/v2/all", {body: {fields:'name'}})
+                .get<Country[]>(`${ this.apiBaseUrl }all`, {body: {fields:'name'}})
                 .then(countries => countries.map(c => { 
                     return { name: c.name, value: c.name.toLowerCase() }
                   }));
@@ -30,7 +30,7 @@ export class CountriesAPIRemote implements ICountriesAPI {
     if(!this.countries)
     {
       return this.api
-                .get(`https://restcountries.eu/rest/v2/name/${countryName}`, {body: {fullText:true}})
+                .get(`${ this.apiBaseUrl }name/${ countryName }`, {body: {fullText:true}})
                 .then(res => !(!res[0]));
     }else{
       return new Promise(resolve => {
