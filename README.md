@@ -1,6 +1,5 @@
 # Application Processor
 
-<<<<<<< HEAD
 This is a web based Job application processor created with Aurelia JS in TypeScript, on top of a .NET5 WebAPI and Entity Framework.
 
 ## How to build
@@ -13,7 +12,7 @@ In order to run this project on linux,
 
 Clone the project repository from github by using
 
-    ~$ git clone https://github.com/hugovicfortman/hahn-applicationprocess-december2020.git
+    ~$ git clone https://github.com/hugovicfortman/applicationprocess-december2020.git
 
 or download and extract the repository the zipped archive.
 
@@ -21,7 +20,7 @@ or download and extract the repository the zipped archive.
 
 on the terminal from the download path enter the Web
 
-    ~$ cd Hahn.ApplicationProcess.Application/Hahn.ApplicationProcess.December2020.Web
+    ~$ cd applicationprocess-december2020/ApplicationProcess.December2020.Web
 
 ### 3) Build the Project
 
@@ -29,15 +28,15 @@ To build the project, simply run
 
     ~$ dotnet build
 
-which will restore all the nuget packages and resolve project dependencies
+Since this application is built in .NET5, this command automatically includes `dotnet restore` which will restore all the nuget packages and resolve project dependencies
 
 ### 4) Running the Project
 
-To run teh project, use
+To run the project, use
 
     ~$ dotnet run
 
-This builds the project and runs it. By default, the .netcore cli starts the project at `http://localhost:5000/` with a secure `https` listener at `https://localhost:5001/`
+This builds and runs the project. By default, the .netcore cli starts the project at `http://localhost:5000/` with a secure `https` listener at `https://localhost:5001/`
 
 ## Swagger UI
 
@@ -58,7 +57,7 @@ It includes validation, dialogs, and globalization.
 
 To use the aurelia ui, navigate to the UI project from the project root with the following command
 
-    ~$ cd Hahn.ApplicationProcess.December2020.Web/hahn-application-ui
+    ~$ cd ../ApplicationProcess.December2020.Web/application-ui
 
 build the project with the following command
 
@@ -103,5 +102,4 @@ This will build the project using production settings and optimisation, and copy
 
 The output directory `outDir` has been set to point to the Web project's wwwroot folder which is now be available at `/home`.
 
-For more on the Aurelia project, see the aurelia cli generated README [here](./Hahn.ApplicationProcess.December2020.UI/hahn-application-ui/README.md)
->>>>>>> 9fa1751a621b29b49906a005729036a9a6be976c
+For more on the Aurelia project, see the aurelia cli generated README [here](./ApplicationProcess.December2020.UI/application-ui/README.md)
