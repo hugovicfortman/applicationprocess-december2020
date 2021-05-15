@@ -1,0 +1,43 @@
+{
+  "titles": {
+    "applicant": "Bewerber",
+    "new_applicant": "Neue Bewerber",
+    "view_applicant": "Bewerber anzeigen",
+    "view_applicants": "Bewerber anzeigen"
+  },
+  "models": {
+    "applicant": {
+      "name": "Vorname",
+      "familyName": "Nachname",
+      "age": "Alter",
+      "emailAddress": "E-Mail-Addresse",
+      "address": "Addresse",
+      "countryOfOrigin": "Herkunftsland",
+      "hired": "Gemietet"
+    }
+  },
+  "commands": {
+    "send": "Senden",
+    "reset": "Zurücksetzen",
+    "yes": "Ja",
+    "no": "Nein",
+    "ok": "OK",
+    "application_view": "Anwendung anzeigen",
+    "application_new": "Neue Bewerbung"
+  },
+  "messages": {
+    "message": "Information",
+    "confirm": "Bestätigen",
+    "confirm_reset": "Dadurch werden alle Daten zurückgesetzt. Sind Sie sicher?",
+    "confirm_exit": "Sie haben nicht gespeicherte Änderungen. Sind Sie sicher, dass Sie gehen möchten?",
+    "success": "Erfolg",
+    "success_application": "Bewerbung wurde erfolgreich eingereicht.",
+    "error": "Der folgende {{errortype}}  ist aufgetreten: \n {{error}}",
+    "validation": {
+      "is_required": "{{ field }} ist nötig.",
+      "min_length": "{{ field }} muss mindestens {{ min_count }} Zeichen enthalten.",
+      "in_between": "{{ field }} muss zwischen {{ lower_limit }} und {{ upper_limit }} liegen, darf aber nicht gleich sein.",
+      "valid_email": "{{ field }} ist keine gültige E-Mail."
+    }
+  }
+}

@@ -1,4 +1,6 @@
 {
   "debug": false,
-  "testing": false
+  "testing": false,
+  "api_root": "/",
+  "countries_api": "https://restcountries.eu/rest/v2/"
 }

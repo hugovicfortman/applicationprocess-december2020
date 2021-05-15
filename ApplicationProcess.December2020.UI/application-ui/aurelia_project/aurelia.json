@@ -1,5 +1,5 @@
 {
-  "name": "hahn-application-ui",
+  "name": "application-ui",
   "type": "project:application",
   "paths": {
     "root": "src",
@@ -25,6 +25,6 @@
     "open": false,
     "port": 8080,
     "host": "localhost",
-    "output": "dist"
+    "output": "../../../ApplicationProcess.December2020.Web/wwwroot"
   }
 }

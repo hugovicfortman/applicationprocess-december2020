@@ -1,4 +1,6 @@
 {
   "debug": true,
-  "testing": true
+  "testing": false,
+  "api_root": "https://localhost:5001/",
+  "countries_api": "https://restcountries.eu/rest/v2/"
 }

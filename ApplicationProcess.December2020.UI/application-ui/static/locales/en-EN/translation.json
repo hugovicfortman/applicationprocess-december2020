@@ -1,0 +1,43 @@
+{
+  "titles": {
+    "applicant": "Applicant",
+    "new_applicant": "New Applicant",
+    "view_applicant": "View Applicant",
+    "view_applicants": "View Applicants"
+  },
+  "models": {
+    "applicant": {
+      "name": "First Name",
+      "familyName": "Last Name",
+      "age": "Age",
+      "emailAddress": "Email Address",
+      "address": "Address",
+      "countryOfOrigin": "Country of Origin",
+      "hired": "Hired"
+    }
+  },
+  "commands": {
+    "send": "Send",
+    "reset": "Reset",
+    "yes": "Yes",
+    "no": "No",
+    "ok": "OK",
+    "application_view": "View Application",
+    "application_new": "Submit another Application"
+  },
+  "messages": {
+    "message": "Message",
+    "confirm": "Confirm",
+    "confirm_reset": "This will reset all the data. Are you sure?",
+    "confirm_exit": "You have unsaved changes, Are you sure you wish to leave?",
+    "success": "Success",
+    "success_application": "Application was successfully submitted.",
+    "error": "The following {{errortype}} occured: <br/> {{error}}",
+    "validation": {
+      "is_required": "{{ field }} is required.",
+      "min_length": "{{ field }} must be at least {{ min_count }} characters.",
+      "in_between": "{{ field }} must be between but not equal to {{ lower_limit }} and {{ upper_limit }}.",
+      "valid_email": "{{ field }} is not a valid email."
+    }
+  }
+}
