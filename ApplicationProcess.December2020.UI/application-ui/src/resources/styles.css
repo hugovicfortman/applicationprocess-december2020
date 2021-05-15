@@ -1,0 +1,69 @@
+body { padding-top: 115px; color: #333; font-family: 'Abel', sans-serif; }
+
+
+/*
+  Theme Colours
+  #158ece     - blue used in borders and icons
+  #428bca     - blue used in headings
+  #fff        - white background color
+  #333        - gray text color
+*/
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  color: #428bca;
+}
+
+.navbar-brand{
+  height:100px;
+}
+
+section {
+  margin: 0 20px;
+}
+
+a:focus {
+  outline: none;
+}
+
+.navbar-nav li.loader {
+    margin: 12px 24px 0 6px;
+}
+
+.help-block{
+  float:left;
+  clear:both;
+}
+
+.panel {
+  margin: 20px;
+}
+
+.button-bar {
+  right: 0;
+  left: 0;
+  bottom: 0;
+  border-top: 1px solid #ddd;
+  background: white;
+}
+
+.button-bar > button {
+  float: right;
+  margin: 20px;
+}
+
+li.list-group-item {
+  list-style: none;
+}
+
+li.list-group-item > a {
+  text-decoration: none;
+}
+
+li.list-group-item.active > a {
+  color: white;
+}

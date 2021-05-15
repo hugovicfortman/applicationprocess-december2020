@@ -10,9 +10,9 @@
             "request": "launch",
             "preLaunchTask": "build",
             // If you have changed target frameworks, make sure to update the program path.
-            "program": "${workspaceFolder}/Hahn.ApplicationProcess.December2020.Web/bin/Debug/net5.0/Hahn.ApplicationProcess.December2020.Web.dll",
+            "program": "${workspaceFolder}/ApplicationProcess.December2020.Web/bin/Debug/net5.0/ApplicationProcess.December2020.Web.dll",
             "args": [],
-            "cwd": "${workspaceFolder}/Hahn.ApplicationProcess.December2020.Web",
+            "cwd": "${workspaceFolder}/ApplicationProcess.December2020.Web",
             "stopAtEntry": false,
             // Enable launching a web browser when ASP.NET Core starts. For more information: https://aka.ms/VSCode-CS-LaunchJson-WebBrowser
             "serverReadyAction": {
